@@ -19,6 +19,11 @@ class FileController:
         self.data = 'empty'
         self.file_location = ''
 
+    def is_file(self, string):
+        if os.path.isfile(string):
+            fv.fc_file_found()
+            self.read_file(string)
+
     # Command Handler - Made by Matthew
     def handle_command(self, cmd, file_location):
         self.file_location = file_location
@@ -27,12 +32,7 @@ class FileController:
             if self.command == "":
                 fv.fc_defaults(file_location)
                 try:
-                    if os.path.isfile("../Graph.txt"):
-                        fv.fc_file_found()
-                        self.read_file("../Graph.txt")
-                    elif os.path.isfile("./Graph.txt"):
-                        fv.fc_file_found()
-                        self.read_file("./Graph.txt")
+                    self.is_file("graph.txt");
                 except FileNotFoundError:
                     fv.general_error()
                     fv.fc_file_not_found(file_location, "r")
@@ -78,6 +78,10 @@ class FileController:
                     fv.fc_syntax_error("absload")
         except FileNotFoundError:
             fv.fc_load_file_error(file_location)
+
+
+
+
 
     # Reads file - Liam
     def read_file(self, filename):

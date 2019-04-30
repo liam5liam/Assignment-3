@@ -71,9 +71,8 @@ class FileConverter:
     # Made by Liam
     # Modified by Matt to pass the PEP8 checks.
     def return_program(self):
-        out = "# File generated & created on: " + str(datetime.datetime.now())
-        out += "\n# File passes the PEP8 check."
-        out += "\n\n"
+        out = "# File generated & created on: " + str(datetime.datetime.now()) + \
+              "\n# File passes the PEP8 check." + "\n\n"
         for x in self.converted_classes:
             out += (x.return_class())
         # out += ""
