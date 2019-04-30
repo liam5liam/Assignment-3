@@ -57,7 +57,6 @@ class Main(cmd.Cmd):
         Usage: LOAD [filename.txt]
         """
         fc.handle_command("load", line)
-        fv.next_command()
 
         """
         userinput = input("Would you like to view the file? (Y/N) ")
@@ -84,7 +83,6 @@ class Main(cmd.Cmd):
         else:
             fv.general_error()
             fv.fe_abs_path_error()
-            fv.next_command()
 
     # View help file - Matt and Liam
     def do_allhelp(self, line):
@@ -93,7 +91,6 @@ class Main(cmd.Cmd):
         Usage: ALLHELP
         """
         fv.print_help()
-        fv.next_command()
 
     # Exit method - Matt
     def do_exit(self, line):
@@ -119,7 +116,6 @@ class Main(cmd.Cmd):
         """
         line = line.split(' ')
         fc.save_file(line[0], line[1])
-        fv.next_command()
 
     # Printcode method - Liam
     def do_printcode(self, line):
@@ -128,7 +124,6 @@ class Main(cmd.Cmd):
         Usage: printcode {code_id}
         """
         fc.print_code(line)
-        fv.next_command()
 
     # Loadcode method - Liam
     def do_loadcode(self, line):
@@ -137,7 +132,6 @@ class Main(cmd.Cmd):
         Usage: loadcode {code_id}
         """
         fc.load_code(line)
-        fv.next_command()
 
     # Printfile method - Liam
     def do_printfile(self, line):
@@ -146,8 +140,8 @@ class Main(cmd.Cmd):
         Usage: printfile
         """
         fc.print_file()
-        fv.next_command()
 
+    fv.next_command()
 
 # Liam
 def print_to_screen():
