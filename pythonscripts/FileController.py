@@ -65,7 +65,7 @@ class FileController:
                             self.read_file("../{}".format(file_location))
                         else:
                             fv.general_error()
-                            fv.fc_load_file_error(file_location)
+                            fv.fc_file_not_found(file_location, "", "")
                     except FileNotFoundError:
                         fv.fc_file_not_found(file_location, "a", "absload")
                     except PermissionError:
@@ -77,7 +77,7 @@ class FileController:
                     fv.general_error()
                     fv.fc_syntax_error("absload")
         except FileNotFoundError:
-            fv.fc_load_file_error(file_location)
+            fv.fc_file_not_found(file_location, "", "")
 
 
 

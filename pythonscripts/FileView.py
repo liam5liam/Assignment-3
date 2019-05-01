@@ -76,6 +76,9 @@ class FileView:
                 print("No filename entered.\n"
                       "Expected Syntax: "
                       "absload {path_to_file\\filename.txt}")
+        elif directory == "" and command == "":
+            print("File not found! '{}'"
+                  .format(os.path.abspath(file_location)))
 
     @staticmethod
     def fc_syntax_error(command):
@@ -92,13 +95,6 @@ class FileView:
         print("File permission error! "
               "Make sure you have the "
               "correct read permission on the file")
-
-    @staticmethod
-    def fc_load_file_error(file_location):
-        print("File not found! '{}'"
-              .format(os.path.abspath(file_location)))
-    # File Handler Methods
-    # File Converter Methods
 
     @staticmethod
     def fc_plantuml_converting():
