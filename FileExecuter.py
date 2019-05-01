@@ -159,72 +159,74 @@ def print_to_screen():
 
 m = Main()
 
-class CheckDictionary():
-
-    def __init__(self, cmd, arg1, arg2, length):
-        self.arg1 = arg1
-        self.arg2 = arg2
-        self.cmd = cmd
-        self.length = length
-        self.command_dict = {
-            "save": [fv.fe_command_syntax("Save"), self.save_cmd()],
-            "help": [fc.view_help()],
-            "loadcode": [fv.fe_loadcode_syntax("loadcode"), self.loadcode_cmd()],
-            "printcode": [fv.fe_loadcode_syntax("printcode"), self.printcode_cmd()],
-            "load": [fv.fe_command_syntax("Load"), self.load_cmd()],
-            "absload": [fv.fe_abs_path_error(), self.absload_cmd()]
-        }
-
-    def save_cmd(self):
-         fc.save_file(self.arg1, self.arg2)
-
-    def loadcode_cmd(self):
-         fc.load_code(self.arg1)
-
-    def printcode_cmd(self):
-        fc.print_code(self.arg1)
-
-    def load_cmd(self):
-        fc.handle_command("load", str(self.arg1))
-
-    def absload_cmd(self):
-        fc.handle_command("absload", str(self.arg1))
-
-    def get_error(self):
-        self.command_dict[self.cmd][0]()
-
-    def check(self):
-        if self.cmd in self.command_dict:
-            if self.length > 3:
-                fv.fe_too_many_args()
-            elif self.length == 2:
-                fv.general_error()
-                self.get_error()
-            elif self.length > 2:
-                self.command_dict[cmd][1]()
-            else:
-                fv.general_error()
-                fv.output("Command not found!")
-                m.cmdloop()
-
-
 if __name__ == "__main__":
     # For Debugging Sys.Argv
     # print('Number of arguments:', len(sys.argv), 'arguments.')
     # print('Argument List:', str(sys.argv))
-
-
-    length = len(sys.argv)
-    cmd = str(sys.argv[1]).lower()
-    sys.argv.insert(1, -1)
-
-    checkDictionary = CheckDictionary(cmd, sys.argv[2], sys.argv[3], length)
-
-
+    if len(sys.argv) >= 2:
+        command = str(sys.argv[1]).lower()
     try:
-        checkDictionary.check();
+        if len(sys.argv) < 2:
+            m.cmdloop()
+            # fv.fe_defaults()
+            # fc.handle_command('', '')
+            # print_to_screen()
+        elif len(sys.argv) > 3:
+            # Liam's save command
+            if command == "save":
+                if len(sys.argv) == 2:
+                    fv.general_error()
+                    fv.fe_command_syntax("Save")
+                else:
+                    fc.save_file(sys.argv[2], sys.argv[3])
+            else:
+                fv.fe_too_many_args()
+        else:
+            if command == "help":
+                fc.view_help()
 
+            # Liam's save command
+            elif command == "save":
+                if len(sys.argv) == 2:
+                    fv.general_error()
+                    fv.fe_command_syntax("Save")
+                else:
+                    fc.save_file(sys.argv[2], sys.argv[3])
 
+            # Liam's loadcode command
+            elif command == "loadcode":
+                if len(sys.argv) == 2:
+                    fv.general_error()
+                    fv.fe_loadcode_syntax("loadcode")
+                else:
+                    fc.load_code(sys.argv[2])
+
+            # Liam's printcode command
+            elif command == "printcode":
+                if len(sys.argv) == 2:
+                    fv.general_error()
+                    fv.fe_loadcode_syntax("printcode")
+                else:
+                    fc.print_code(sys.argv[2])
+
+            elif command == "load":
+                if len(sys.argv) == 2:
+                    fv.general_error()
+                    fv.fe_command_syntax("Load")
+                else:
+                    fc.handle_command("load", str(sys.argv[2]))
+            elif command == "absload":
+                if len(sys.argv) == 2:
+                    fv.general_error()
+                    fv.fe_abs_syntax()
+                if "\\" in str(sys.argv[2]):
+                    fc.handle_command("absload", str(sys.argv[2]))
+                else:
+                    fv.general_error()
+                    fv.fe_abs_path_error()
+            else:
+                fv.general_error()
+                fv.output("Command not found!")
     # Ignores issues with Sys.argv
     except IndexError:
         pass

@@ -99,7 +99,7 @@ class FileController:
         except IOError:
             print("System failed to save to file")
         except ValueError and TypeError:
-            fv.display("Please enter an integer")
+            fv.output("Please enter an integer")
         except Exception as e:
             fv.general_error()
             print("An error has occurred")
@@ -108,7 +108,7 @@ class FileController:
     # Liam
     def print_file(self):
         try:
-            fv.display_graph_code(self.data)
+            fv.output(self.data)
         except IOError:
             print("System failed to load to file")
         except Exception as e:
@@ -135,16 +135,16 @@ class FileController:
             code = db.get_code(code_id)
             if code != '':
                 self.data = code
-                fv.display("Code has loaded successfully")
+                fv.output("Code has loaded successfully")
             else:
-                fv.display("ERROR: code failed to load:")
-                fv.display('\t' + code)
+                fv.output("ERROR: code failed to load:")
+                fv.output('\t' + code)
         except AttributeError as e:
             print(e)
         except IOError:
             print("System failed to save to file")
         except ValueError and TypeError:
-            fv.display("Please enter an integer")
+            fv.output("Please enter an integer")
         except Exception as e:
             fv.general_error()
             print("An error has occurred")
@@ -155,12 +155,12 @@ class FileController:
         try:
             code = db.get_code(code_id)
             if code != '':
-                fv.display_graph_code(code)
+                fv.output(code)
             else:
-                fv.display("ERROR: code failed to load:")
-                fv.display('\t' + code)
+                fv.output("ERROR: code failed to load:")
+                fv.output('\t' + code)
         except ValueError and TypeError:
-            fv.display("Please enter an integer")
+            fv.output("Please enter an integer")
         except IOError as e:
             print("System failed to load to file")
             print(e)

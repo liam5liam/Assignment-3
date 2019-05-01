@@ -161,18 +161,6 @@ class FileView:
     def output(message):
         print(str(message))
 
-    @staticmethod
-    def display_graph_code(code):
-        print(code)
-
-    @staticmethod
-    def display(data):
-        print(data)
-
-    @staticmethod
-    def file_error():
-        print("")
-
     # FileExecuter CMD Methods
     @staticmethod
     def next_command():
