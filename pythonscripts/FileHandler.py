@@ -212,20 +212,17 @@ class ClassBuilder:
 
     # Made by Liam
     def return_class(self):
-        out = ""
-        out += str("\nclass {}:\n\n").format(self.name)
+        out = str("\nclass {}:\n\n").format(self.name)
 
         length = len(self.all_my_attributes)
         count = 0
+
         for x in self.all_my_attributes:
+            out += str("{}".format(x)) + \
+                   str("\n")
             if count == length - 1:
-                out += str("{}".format(x))
-                out += str("\n\n")
-                count += 1
-            elif count < length:
-                out += str("{}".format(x))
                 out += str("\n")
-                count += 1
+            count += 1
 
         # Don't worry, I figured this out :P - Easy carry made by matt
         out += str("    " + "def __init__(self):\n")
@@ -236,12 +233,12 @@ class ClassBuilder:
                 f" = {a_class[1]}()  "
                 f"# {a_class[0]}\n"
             )
-        out += "\n"
-        out += str("        " + "pass\n\n")
+        out += "\n" + \
+               str("        " + "pass\n\n")
 
         for x in self.all_my_methods:
-            out += str("{}".format(x))
-            out += str("\n\n")
+            out += str("{}".format(x)) + \
+                   str("\n\n")
         return out
 
 
