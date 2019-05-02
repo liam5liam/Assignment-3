@@ -53,12 +53,6 @@ class FileController:
         out = False
         if file_location.endswith(".txt"):
             out = True
-        else:
-            if file_location == "":
-                fv.fc_file_not_found(file_location, "", "absload")
-            else:
-                fv.fc_syntax_error("absload")
-            fv.general_error()
         return out
 
     # Command Handler - Made by Matthew
@@ -105,6 +99,7 @@ class FileController:
             fv.general_error()
             print("An error has occurred")
             print(e)
+
     # Liam
     def save_file(self, file_name, code_id):
         self.data = db.get_code(code_id)

@@ -159,81 +159,47 @@ def print_to_screen():
 
 m = Main()
 
-if __name__ == "__main__":
-    # For Debugging Sys.Argv
-    # print('Number of arguments:', len(sys.argv), 'arguments.')
-    # print('Argument List:', str(sys.argv))
-    if len(sys.argv) >= 2:
-        command = str(sys.argv[1]).lower()
-    try:
-        if len(sys.argv) < 2:
-            m.cmdloop()
-            # fv.fe_defaults()
-            # fc.handle_command('', '')
-            # print_to_screen()
-        elif len(sys.argv) > 3:
-            # Liam's save command
-            if command == "save":
-                if len(sys.argv) == 2:
-                    fv.general_error()
-                    fv.fe_command_syntax("Save")
-                else:
-                    fc.save_file(sys.argv[2], sys.argv[3])
-            else:
+class CheckDictionary():
+
+    def __init__(self, sysargv):
+        self.cmd = ''
+        self.length = 0
+        self.sysargv = sysargv
+        self.command_dict = {
+            "save": [fc.save_file(self.sysargv[1], self.sysargv[2])],
+            "help": [fc.view_help()],
+            "loadcode": [fc.load_code(self.sysargv[1])],
+            "printcode": [fc.print_code(self.sysargv[2])],
+            "load": [fc.handle_command("load", str(self.sysargv[1]))],
+            "absload": [fc.handle_command("absload", str(self.sysargv[2]))]
+        }
+
+    def check(self):
+        if self.cmd in self.command_dict:
+            if self.length > 3:
                 fv.fe_too_many_args()
-        else:
-            if command == "help":
-                fc.view_help()
-
-            # Liam's save command
-            elif command == "save":
-                if len(sys.argv) == 2:
-                    fv.general_error()
-                    fv.fe_command_syntax("Save")
-                else:
-                    fc.save_file(sys.argv[2], sys.argv[3])
-
-            # Liam's loadcode command
-            elif command == "loadcode":
-                if len(sys.argv) == 2:
-                    fv.general_error()
-                    fv.fe_loadcode_syntax("loadcode")
-                else:
-                    fc.load_code(sys.argv[2])
-
-            # Liam's printcode command
-            elif command == "printcode":
-                if len(sys.argv) == 2:
-                    fv.general_error()
-                    fv.fe_loadcode_syntax("printcode")
-                else:
-                    fc.print_code(sys.argv[2])
-
-            elif command == "load":
-                if len(sys.argv) == 2:
-                    fv.general_error()
-                    fv.fe_command_syntax("Load")
-                else:
-                    fc.handle_command("load", str(sys.argv[2]))
-            elif command == "absload":
-                if len(sys.argv) == 2:
-                    fv.general_error()
-                    fv.fe_abs_syntax()
-                if "\\" in str(sys.argv[2]):
-                    fc.handle_command("absload", str(sys.argv[2]))
-                else:
-                    fv.general_error()
-                    fv.fe_abs_path_error()
+            elif self.length == 1 and self.cmd != "help":
+                fv.general_error()
+            elif self.length >= 1:
+                self.command_dict[self.cmd][1]()
             else:
                 fv.general_error()
                 fv.output("Command not found!")
-    # Ignores issues with Sys.argv
-    except IndexError:
-        pass
-    # Checks for file permission errors.
-    except PermissionError:
-        print("Permission Error!\n"
-              "Check you have the permission to read the file!")
-    else:
-        pass
-        # m.cmdloop()
+       # m.cmdloop()
+
+    def handle_sysargv(self):
+        self.length = len(self.sysargv)
+        self.cmd = str(self.sysargv[0]).lower()
+
+        try:
+            checkDictionary.check()
+        except IndexError:
+            pass
+        except PermissionError:
+            print("Permission Error!\n"
+                  "Check you have the permission to read the file!")
+
+
+if __name__ == "__main__":
+    checkDictionary = CheckDictionary(sys.argv)
+    checkDictionary.handle_sysargv()
