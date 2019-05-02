@@ -68,6 +68,9 @@ class FileView:
             print("File not found! There must be a "
                   "{}.txt in the chosen directory!"
                   .format(file_location))
+        elif directory == "lf":
+            print("Unable to locate file {}.txt"
+                  .format(file_location))
         elif directory == "":
             if command == "load":
                 print("No filename entered.\n"

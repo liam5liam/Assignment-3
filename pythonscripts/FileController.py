@@ -19,65 +19,55 @@ class FileController:
         self.data = 'empty'
         self.file_location = ''
 
+        self.command_dict = {
+            "load": self.load_cmd,
+            "absload": self.load_cmd
+        }
+
     def is_file(self, string):
         if os.path.isfile(string):
             fv.fc_file_found()
             self.read_file(string)
 
+    def load_cmd(self, file_location):
+        try:
+            if os.path.isfile("./{}".format(file_location)):
+                fv.fc_file_found()
+                self.read_file("./{}".format(file_location))
+        except FileNotFoundError:
+            fv.fc_file_not_found(file_location, "r", "load")
+        except PermissionError:
+            fv.fc_permission_error()
+
+    def absload_cmd(self, file_location):
+        try:
+            if os.path.isfile("{}".format(file_location)):
+                fv.fc_file_found()
+                self.read_file("../{}".format(file_location))
+        except FileNotFoundError:
+            fv.fc_file_not_found(file_location, "a", "absload")
+        except PermissionError:
+            fv.fc_permission_error()
+
+    def cmd_checker(self, file_location):
+        out = False
+        if file_location.endswith(".txt"):
+            out = True
+        else:
+            if file_location == "":
+                fv.fc_file_not_found(file_location, "", "absload")
+            else:
+                fv.fc_syntax_error("absload")
+            fv.general_error()
+        return out
+
     # Command Handler - Made by Matthew
     def handle_command(self, cmd, file_location):
-        self.file_location = file_location
-        self.command = cmd
         try:
-            if self.command == "":
-                fv.fc_defaults(file_location)
-                try:
-                    self.is_file("graph.txt");
-                except FileNotFoundError:
-                    fv.general_error()
-                    fv.fc_file_not_found(file_location, "r")
-            elif self.command == "load":
-                if file_location.endswith(".txt"):
-                    try:
-                        if os.path.isfile("../{}".format(file_location)):
-                            fv.fc_file_found()
-                            self.read_file("../{}".format(file_location))
-                        elif os.path.isfile("./{}".format(file_location)):
-                            fv.fc_file_found()
-                            self.read_file("./{}".format(file_location))
-                    except FileNotFoundError:
-                        fv.general_error()
-                        fv.fc_file_not_found(file_location, "r", "load")
-                    except PermissionError:
-                        fv.general_error()
-                        fv.fc_permission_error()
-                elif file_location == "":
-                    fv.general_error()
-                    fv.fc_file_not_found(file_location, "", "load")
-                else:
-                    fv.general_error()
-                    fv.fc_syntax_error("load")
-            elif self.command == "absload":
-                if file_location.endswith(".txt"):
-                    try:
-                        if os.path.isfile("{}".format(file_location)):
-                            fv.fc_file_found()
-                            self.read_file("../{}".format(file_location))
-                        else:
-                            fv.general_error()
-                            fv.fc_file_not_found(file_location, "", "")
-                    except FileNotFoundError:
-                        fv.fc_file_not_found(file_location, "a", "absload")
-                    except PermissionError:
-                        fv.fc_permission_error()
-                elif file_location == "":
-                    fv.general_error()
-                    fv.fc_file_not_found(file_location, "", "absload")
-                else:
-                    fv.general_error()
-                    fv.fc_syntax_error("absload")
+            if self.cmd_checker(file_location):
+                self.command_dict[cmd](file_location)
         except FileNotFoundError:
-            fv.fc_file_not_found(file_location, "", "")
+            fv.fc_file_not_found(file_location, "lf", "")
 
 
 
