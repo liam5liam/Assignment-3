@@ -7,6 +7,12 @@ class FileView:
     # File Handler and FileController Methods
     def __init__(self):
         self.error_message = "\n==========ERROR==========\n"
+        self.directories = {
+            "r": self.no_root_dir,
+            "a": self.no_chosen_dir,
+            "lf": self.no_file,
+            "": self.no_dir
+        }
 
     def general_error(self):
         print(self.error_message)
@@ -58,30 +64,36 @@ class FileView:
     def fc_file_found():
         print("\nFile Found! Reading..\n")
 
-    @staticmethod
-    def fc_file_not_found(file_location, directory, command):
-        if directory == "r":
-            print("File not found! There must be a "
-                  "{}.txt in the root directory!"
-                  .format(file_location))
-        elif directory == "a":
-            print("File not found! There must be a "
-                  "{}.txt in the chosen directory!"
-                  .format(file_location))
-        elif directory == "lf":
-            print("Unable to locate file {}.txt"
-                  .format(file_location))
-        elif directory == "":
-            if command == "load":
-                print("No filename entered.\n"
-                      "Expected Syntax: load {filename.txt}")
-            elif command == "absload":
-                print("No filename entered.\n"
-                      "Expected Syntax: "
-                      "absload {path_to_file\\filename.txt}")
-        elif directory == "" and command == "":
+    def no_root_dir(self, file_location, command):
+        print("File not found! There must be a "
+              "{}.txt in the root directory!"
+              .format(file_location))
+
+    def no_chosen_dir(self, file_location, command):
+        print("File not found! There must be a "
+             "{}.txt in the chosen directory!"
+             .format(file_location))
+
+    def no_file(self, file_location, command):
+        print("File not found! There must be a "
+              "{}.txt in the chosen directory!"
+              .format(file_location))
+
+    def no_dir(self, file_location, command):
+        if command == "load":
+            print("No filename entered.\n"
+                  "Expected Syntax: load {filename.txt}")
+        elif command == "absload":
+            print("No filename entered.\n"
+                  "Expected Syntax: "
+                  "absload {path_to_file\\filename.txt}")
+        elif command == "":
             print("File not found! '{}'"
                   .format(os.path.abspath(file_location)))
+
+    @staticmethod
+    def fc_file_not_found(file_location, directory, command):
+        self.directories[directory](file_location, command)
 
     @staticmethod
     def fc_syntax_error(command):
