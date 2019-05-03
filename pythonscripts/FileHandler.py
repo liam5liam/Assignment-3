@@ -220,9 +220,7 @@ class ClassBuilder:
 
         out += str("\n    " + "def __init__(self):\n")
         for a_class in self.relationships:
-            out += str(
-                "        " f"self.{str(a_class[1]).lower()}" f" = {a_class[1]}()  " f"# {a_class[0]}\n"
-            )
+            out += str("        " f"self.{str(a_class[1]).lower()}" f" = {a_class[1]}()  " f"# {a_class[0]}\n")
         out += str("\n        " + "pass\n\n")
 
         for x in self.all_my_methods:
