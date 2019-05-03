@@ -102,17 +102,24 @@ class FileController:
 
     # Liam
     def save_file(self, file_name, code_id):
+        isSaved = True
         self.data = db.get_code(code_id)
         try:
             fw.write_file(db.get_code(code_id), file_name)
         except AttributeError as e:
             print(e)
+            isSaved = False
         except IOError as e:
             print("System failed to save to file")
+            print(e)
+            isSaved = False
         except Exception as e:
             fv.general_error()
             print("An error has occurred")
             print(e)
+            isSaved = False
+        if isSaved:
+            fv.file_written(file_name)
 
     # Liam
     def load_code(self, code_id):

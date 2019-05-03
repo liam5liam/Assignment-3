@@ -131,7 +131,7 @@ class FileView:
     @staticmethod
     def fe_too_many_args():
         print("\nToo many arguments entered. "
-              "Please enter at most 2.")
+              "Please enter at most 3.")
 
     @staticmethod
     def fe_command_syntax(name):

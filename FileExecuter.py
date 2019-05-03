@@ -166,30 +166,64 @@ class CheckDictionary():
         self.length = 0
         self.sysargv = sysargv
         self.command_dict = {
-            "save": [fc.save_file(self.sysargv[1], self.sysargv[2])],
-            "help": [fc.view_help()],
-            "loadcode": [fc.load_code(self.sysargv[1])],
-            "printcode": [fc.print_code(self.sysargv[2])],
-            "load": [fc.handle_command("load", str(self.sysargv[1]))],
-            "absload": [fc.handle_command("absload", str(self.sysargv[2]))]
+            "save": self.save,
+            "help": fc.view_help,
+            "loadcode": self.loadcode,
+            "printcode": self.printcode,
+            "load": self.load,
+            "absload": self.absload
         }
+
+    def check_correct(self):
+        out = False
+        if self.cmd == "save" and self.length == 4:
+            out = True
+        elif self.length == 3:
+            out = True
+
+        return out
+
+    def save(self):
+        if self.check_correct():
+            fc.save_file(self.sysargv[2], self.sysargv[3])
+        else:
+            fv.fe_command_syntax("Save")
+
+    def loadcode(self):
+        if self.check_correct():
+            fc.load_code(self.sysargv[2])
+        else:
+            fv.fe_loadcode_syntax("loadcode")
+
+    def printcode(self):
+        if self.check_correct():
+            fc.print_code(self.sysargv[2])
+        else:
+            fv.fe_loadcode_syntax("printcode")
+
+    def load(self):
+        if self.check_correct():
+            fc.handle_command("load", str(self.sysargv[2]))
+        else:
+            fv.fe_loadcode_syntax("load")
+
+    def absload(self):
+        if self.check_correct():
+            fc.handle_command("absload", str(self.sysargv[2]))
+        else:
+            fv.fe_loadcode_syntax("absload")
 
     def check(self):
         if self.cmd in self.command_dict:
-            if self.length > 3:
-                fv.fe_too_many_args()
-            elif self.length == 1 and self.cmd != "help":
-                fv.general_error()
-            elif self.length >= 1:
-                self.command_dict[self.cmd][1]()
-            else:
-                fv.general_error()
-                fv.output("Command not found!")
-       # m.cmdloop()
+            self.command_dict[self.cmd]()
+        else:
+            fv.general_error()
+            fv.output("Command not found!")
+
 
     def handle_sysargv(self):
         self.length = len(self.sysargv)
-        self.cmd = str(self.sysargv[0]).lower()
+        self.cmd = str(self.sysargv[1]).lower()
 
         try:
             checkDictionary.check()
@@ -203,3 +237,4 @@ class CheckDictionary():
 if __name__ == "__main__":
     checkDictionary = CheckDictionary(sys.argv)
     checkDictionary.handle_sysargv()
+    m.cmdloop()
