@@ -60,18 +60,6 @@ class Main(cmd.Cmd):
         """
         fc.handle_command("load", line)
 
-        """
-        userinput = input("Would you like to view the file? (Y/N) ")
-        if userinput.lower() == "y":
-            # open the file
-            pass
-        elif userinput.lower() == "n":
-            pass
-        else:
-            # ask them again
-            pass
-        """
-
     # Absload method - Matt
     def do_absload(self, line):
         """
@@ -237,4 +225,4 @@ class CheckDictionary():
 if __name__ == "__main__":
     checkDictionary = CheckDictionary(sys.argv)
     checkDictionary.handle_sysargv()
-    m.cmdloop()
+    #m.cmdloop()

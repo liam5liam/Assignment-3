@@ -255,17 +255,15 @@ class Attribute:
         self._return = new_return
         self.name = self.name.strip(' ')
 
+        self.output = {
+            "String": f"    {self.name}: str",
+            "Integer": f"    {self.name}: int",
+            "ArrayObject": f"    {self.name}: list",
+            "Object": f"    {self.name}: object"
+        }
+
     def __str__(self):
-        if self._return == "String":
-            return f"    {self.name}: str"
-        elif self._return == "Integer":
-            return f"    {self.name}: int"
-        elif self._return == "ArrayObject":
-            return f"    {self.name}: list"
-        elif self._return == "Object":
-            return f"    {self.name}: object"
-        else:
-            return f"    {self.name}: '{self._return}' "
+        return self.output[self._return]
 
 
 """
