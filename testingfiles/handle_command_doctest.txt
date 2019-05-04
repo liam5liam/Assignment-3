@@ -1,0 +1,4 @@
+"""
+>>> from .\pythonscripts\FileController import FileController/
+>>> handle_command("absload", "Graph.txt")
+"""

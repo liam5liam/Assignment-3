@@ -63,11 +63,7 @@ class FileController:
         except FileNotFoundError:
             fv.fc_file_not_found(file_location, "lf", "")
 
-
-
-
-
-    # Reads file - Liam
+# Reads file - Liam
     def read_file(self, filename):
         try:
             fconv.read_file(filename)
