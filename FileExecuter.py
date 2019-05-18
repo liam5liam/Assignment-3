@@ -221,7 +221,7 @@ class CheckDictionary():
             print("Permission Error!\n"
                   "Check you have the permission to read the file!")
 
-
+#test
 if __name__ == "__main__":
     checkDictionary = CheckDictionary(sys.argv)
     checkDictionary.handle_sysargv()
