@@ -66,10 +66,8 @@ class FileController:
 # Reads file - Liam
     def read_file(self, filename):
         try:
-            fconv.read_file(filename)
-            fconv.convert_file()
-            fconv.return_program()
-            self.data = fconv.codeToText
+            self.data = fconv.read_file(filename)
+
             fw.write_file(self.data, "Output.txt")
             fw.write_file(self.data, "Output.py")
             db.data_entry(self.data)

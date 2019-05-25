@@ -8,45 +8,66 @@
 import datetime
 import re
 from pythonscripts.FileView import FileView
+from abc import ABCMeta, abstractmethod
 fv = FileView()
 
 
-class FileConverter:
-    def __init__(self):
-        self.classes = []
-        self.converted_classes = []
-        self.my_relationship_content = ""
-        self.codeToText = ""
+class AbstractBuilder(metaclass=ABCMeta):
+    def __init__(self, uml_classes):
+        self.uml_classes = uml_classes
+        self.all_my_converted_classes = []
+        self.all_my_classes = []
 
-    # Made by Sarah - Modified by Matt
-    def convert_file(self):
+    def get_code(self):
+        out = ''
+        for a_class in self.all_my_classes:
+            out += a_class.return_class()
+        return out
+
+    @abstractmethod
+    def add_classes(self): pass
+
+
+class CodeBuilder(AbstractBuilder):
+
+    def add_classes(self):
         fv.fc_plantuml_converting()
-        for class_info in self.classes:
-            class_name = class_info.split(' ')[1]
-            attributes = []
-            methods = []
-            relationships = []
-            for line in class_info.split("\n"):
-                if line.find(":") != -1:
-                    attributes.append(line)
-            for line in class_info.split("\n"):
-                if line.find("()") != -1:
-                    methods.append(line)
-            for relationship in self.my_relationship_content.split("\n"):
-                if self.find_relationship(relationship, class_name):
-                    relationships.append(
-                        self.find_relationship(relationship, class_name))
-            self.add_class(class_name, attributes, methods, relationships)
 
-    # Made by Sarah
-    def add_class(self, class_name, attributes, methods, relationships):
-        new_class = ClassBuilder(class_name, attributes,
-                                 methods, relationships)
-        new_class.add_class_attributes()
-        new_class.add_class_methods()
-        self.converted_classes.append(new_class)
+        for uml_class in self.uml_classes:
+            converted_class = ClassConverter(uml_class)
+            converted_class.make_class()
 
-    # Some work on relationships
+            new_class = Class(converted_class.class_name, converted_class.attributes,
+                              converted_class.methods, converted_class.relationships)
+            new_class.add_class_attributes()
+            new_class.add_class_methods()
+            self.all_my_classes.append(new_class)
+
+
+class ClassConverter:
+    def __init__(self, uml_class):
+        self.uml_class = uml_class
+        self.class_name = ''
+        self.attributes = []
+        self.methods = []
+        self.relationships = []
+
+    def make_class(self):
+        self.class_name = self.uml_class.split(' ')[1]
+        print(self.class_name)
+        for line in self.uml_class.split("\n"):
+            if line.find(":") != -1:
+                self.attributes.append(line)
+
+        for line in self.uml_class.split("\n"):
+            if line.find("()") != -1:
+                self.methods.append(line)
+
+        for relationship in self.uml_class.split("\n"):
+            if self.find_relationship(relationship, self.class_name):
+                self.relationships.append(
+                    self.find_relationship(relationship, self.class_name))
+
     def find_relationship(self, relationship, class_name):
         if relationship.startswith(class_name):
             pass
@@ -64,29 +85,30 @@ class FileConverter:
                 return tuple(("aggregation of", as_class))
 
 
-    # Made by Sarah
-    def print_program(self):
-        for x in self.converted_classes:
-            x.print_class()
+class Director(object):
+    def __init__(self, builder):
+        self.builder = builder
 
-    # Made by Liam
-    # Modified by Matt to pass the PEP8 checks.
-    def return_program(self):
-        out = "# File generated & created on: " + str(datetime.datetime.now()) + \
-              "\n# File passes the PEP8 check." + "\n\n"
-        for x in self.converted_classes:
-            out += (x.return_class())
-        # out += ""
-        self.codeToText += out
+    def get_code(self):
+        self.builder.add_classes()
 
-    # Made by Matt & Liam
-    def read_file(self, file):
-        with open(file, "r") as filename:
+        return self.builder.get_code()
+
+
+class FileConverter:
+    def __init__(self):
+        self.code = ''
+        self.uml_classes = []
+
+    def read_file(self, filename):
+        with open(filename, "r") as filename:
             data = filename.read()
+
         rduml = FileReader(data)
-        self.classes = rduml.find_classes()
-        self.my_relationship_content = \
-            self.classes[len(self.classes) - 1]
+        uml_classes = rduml.find_classes()
+
+        self.code = (Director(CodeBuilder(uml_classes)).get_code())
+        return self.code
 
 
 fc = FileConverter()
@@ -158,7 +180,7 @@ class FileReader:
 
 
 # Made by Sarah
-class ClassBuilder:
+class Class:
     def __init__(self, class_name, new_attributes, new_methods, relationships):
         self.name = class_name
         self.attributes = new_attributes
