@@ -6,11 +6,23 @@ from pythonscripts.FileView import FileView
 from pythonscripts.FileWriter import FileWriter
 import os
 from pythonscripts.DataBase import DataBase
+from abc import abstractmethod, ABCMeta
 
 fconv = FileConverter()
 fw = FileWriter()
 fv = FileView()
 db = DataBase()
+
+
+class Observer(metaclass=ABCMeta):
+    def __init__(self):
+        self._subject = None
+        self._state = None
+
+    @abstractmethod
+    def update(self, arg): pass
+
+
 
 
 class FileController:
