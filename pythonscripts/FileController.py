@@ -29,20 +29,12 @@ class ObserverRead(Observer):
         self._state = arg
         if self._state == 1:
             self._state = arg
+            fv.print_minus()
             print("Checking for Errors...")
             print("Done!")
 
 
-# Write File Wrapper Observer
-class ObserverWrite(Observer):
-    def update(self, arg):
-        self._state = arg
-        if self._state == 1:
-            fv.print_minus()
-
-
 OR = ObserverRead()
-OW = ObserverWrite()
 
 
 # Observes Errors.
@@ -71,7 +63,6 @@ class FileController:
             "absload": self.load_cmd
         }
 
-        self.attach(OW)
         self.attach(OR)
         self.attach(OC)
 
