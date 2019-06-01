@@ -181,3 +181,7 @@ class FileView:
               "'help' for all available commands.")
         print("To quit the program.. Type "
               "'exit' or 'quit'.")
+
+    @staticmethod
+    def print_minus():
+        print("-")

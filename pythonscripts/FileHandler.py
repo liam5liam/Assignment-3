@@ -54,7 +54,6 @@ class ClassConverter:
 
     def make_class(self):
         self.class_name = self.uml_class.split(' ')[1]
-        print(self.class_name)
         for line in self.uml_class.split("\n"):
             if line.find(":") != -1:
                 self.attributes.append(line)

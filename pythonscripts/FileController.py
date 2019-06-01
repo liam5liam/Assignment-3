@@ -71,9 +71,9 @@ class FileController:
             "absload": self.load_cmd
         }
 
-    self.attach(OW)
-    self.attach(OR)
-    self.attach(OC)
+        self.attach(OW)
+        self.attach(OR)
+        self.attach(OC)
 
     def attach(self, observer):
         observer._subject = self
@@ -83,6 +83,9 @@ class FileController:
     def _notify(self):
         for observer in self._observers:
             observer.update(self._state)
+
+    def set_state(self, state):
+        self._state = state
 
     @property
     def subject_state(self):
@@ -131,17 +134,15 @@ class FileController:
     def read_file(self, filename):
         try:
             self.data = fconv.read_file(filename)
-
-            fw.write_file(self.data, "Output.txt")
-            fw.write_file(self.data, "Output.py")
-            db.data_entry(self.data)
-            # fv.file_written("Output.txt, Output.py")
-
+            self.set_state(1)
             # The code has been built
             # The observers must be notified
             self._notify()
-            self.write_file()
-        except IOError:  # pragma: no cover
+            fw.write_file(self.data, "Output.txt")
+            fw.write_file(self.data, "Output.py")
+            db.data_entry(self.data)
+
+        except IOError:
             self._state = "Error: System Failed to Save to File!"
             self._notify()
 
