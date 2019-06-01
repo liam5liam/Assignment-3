@@ -23,9 +23,20 @@ class Observer(metaclass=ABCMeta):
     def update(self, arg): pass
 
 
+# Read Event handler
+class ObserverRead(Observer):
+    def update(self, arg):
+        self._state = arg
+        if self._state == 1:
+            self._state = arg
+            print("Checking for Errors...")
+            print("Done!")
 
 
 class FileController:
+    _state = 0
+    _observers = set()
+
     def __init__(self):
         self.command = ''
         self.data = 'empty'
@@ -35,6 +46,19 @@ class FileController:
             "load": self.load_cmd,
             "absload": self.load_cmd
         }
+
+    def attach(self, observer):
+        observer._subject = self
+        self._observers.add(observer)
+        print("Attached an observer: " + observer.__class__.__name__)
+
+    def _notify(self):
+        for observer in self._observers:
+            observer.update(self._state)
+
+    @property
+    def subject_state(self):
+        return self._state
 
     def is_file(self, string):
         if os.path.isfile(string):
