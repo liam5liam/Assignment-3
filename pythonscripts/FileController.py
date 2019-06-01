@@ -33,6 +33,30 @@ class ObserverRead(Observer):
             print("Done!")
 
 
+# Write File Wrapper Observer
+class ObserverWrite(Observer):
+    def update(self, arg):
+        self._state = arg
+        if self._state == 1:
+            fv.print_minus()
+
+
+OR = ObserverRead()
+OW = ObserverWrite()
+
+
+# Observes Errors.
+class ObserverCheck(Observer):
+    def update(self, arg):
+        self._state = arg
+        if self._state != 1:
+            fv.general_error()
+            fv.output(self._state)
+
+
+OC = ObserverCheck()
+
+
 class FileController:
     _state = 0
     _observers = set()
