@@ -25,10 +25,9 @@ class Observer(metaclass=ABCMeta):
 
 # Read Event handler
 class ObserverRead(Observer):
-    def update(self, arg):
-        self._state = arg
+    def update(self):
+        self._state = self._subject.get_state()
         if self._state == 1:
-            self._state = arg
             fv.print_minus()
             print("Checking for Errors...")
             print("Done!")
@@ -39,8 +38,8 @@ OR = ObserverRead()
 
 # Observes Errors.
 class ObserverCheck(Observer):
-    def update(self, arg):
-        self._state = arg
+    def update(self):
+        self._state = self._subject.get_state()
         if self._state != 1:
             fv.general_error()
             fv.output(self._state)
@@ -49,11 +48,27 @@ class ObserverCheck(Observer):
 OC = ObserverCheck()
 
 
-class FileController:
-    _state = 0
-    _observers = set()
-
+class Subject(metaclass=ABCMeta):
     def __init__(self):
+        self._state = 0
+        self._observers = set()
+
+    @abstractmethod
+    def attach(self, observer):
+        pass
+
+    @abstractmethod
+    def detach(self, observer):
+        pass
+
+    @abstractmethod
+    def _notify(self):
+        pass
+
+
+class FileController(Subject):
+    def __init__(self):
+        Subject.__init__(self)
         self.command = ''
         self.data = 'empty'
         self.file_location = ''
@@ -71,15 +86,18 @@ class FileController:
         self._observers.add(observer)
         print("Attached an observer: " + observer.__class__.__name__)
 
+    def detach(self, observer):
+        self._observers.remove(observer)
+        print("Detached an observer: " + observer.__class__.__name__)
+
     def _notify(self):
         for observer in self._observers:
-            observer.update(self._state)
+            observer.update()
 
     def set_state(self, state):
         self._state = state
 
-    @property
-    def subject_state(self):
+    def get_state(self):
         return self._state
 
     def is_file(self, string):
