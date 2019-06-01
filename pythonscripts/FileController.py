@@ -71,6 +71,10 @@ class FileController:
             "absload": self.load_cmd
         }
 
+    self.attach(OW)
+    self.attach(OR)
+    self.attach(OC)
+
     def attach(self, observer):
         observer._subject = self
         self._observers.add(observer)
