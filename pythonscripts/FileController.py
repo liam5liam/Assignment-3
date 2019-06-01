@@ -136,16 +136,14 @@ class FileController:
             fw.write_file(self.data, "Output.py")
             db.data_entry(self.data)
             # fv.file_written("Output.txt, Output.py")
-        except AttributeError as e:
-            print(e)
-        except IOError:
-            print("System failed to save to file")
-        except ValueError and TypeError:
-            fv.output("Please enter an integer")
-        except Exception as e:
-            fv.general_error()
-            print("An error has occurred")
-            print(e)
+
+            # The code has been built
+            # The observers must be notified
+            self._notify()
+            self.write_file()
+        except IOError:  # pragma: no cover
+            self._state = "Error: System Failed to Save to File!"
+            self._notify()
 
     # Liam
     def print_file(self):
@@ -160,23 +158,15 @@ class FileController:
 
     # Liam
     def save_file(self, file_name, code_id):
-        isSaved = True
+        is_saved = True
         self.data = db.get_code(code_id)
         try:
             fw.write_file(db.get_code(code_id), file_name)
-        except AttributeError as e:
-            print(e)
-            isSaved = False
-        except IOError as e:
-            print("System failed to save to file")
-            print(e)
-            isSaved = False
-        except Exception as e:
-            fv.general_error()
-            print("An error has occurred")
-            print(e)
-            isSaved = False
-        if isSaved:
+        except IOError as e:  # pragma: no cover
+            is_saved = False
+            self._state = "System failed to save to file" + e
+            self._notify()
+        if is_saved:
             fv.file_written(file_name)
 
     # Liam
@@ -187,18 +177,11 @@ class FileController:
                 self.data = code
                 fv.output("Code has loaded successfully")
             else:
-                fv.output("ERROR: code failed to load:")
-                fv.output('\t' + code)
-        except AttributeError as e:
-            print(e)
-        except IOError:
-            print("System failed to save to file")
-        except ValueError and TypeError:
-            fv.output("Please enter an integer")
-        except Exception as e:
-            fv.general_error()
-            print("An error has occurred")
-            print(e)
+                self._state = "ERROR: code failed to load:" + '\t' + code
+                self._notify()
+        except IOError:  # pragma: no cover
+            self._state = "System failed to save to file"
+            self._notify()
 
     # Liam
     def print_code(self, code_id):
@@ -207,13 +190,15 @@ class FileController:
             if code != '':
                 fv.output(code)
             else:
-                fv.output("ERROR: code failed to load:")
-                fv.output('\t' + code)
-        except ValueError and TypeError:
-            fv.output("Please enter an integer")
-        except IOError as e:
-            print("System failed to load to file")
-            print(e)
+                self._state = "ERROR: code failed to load:" \
+                              "\t" + code
+                self._notify()
+        except ValueError and TypeError:  # pragma: no cover
+            self._state = "Please enter an integer"
+            self._notify()
+        except IOError as e:  # pragma: no cover
+            self._state = "System failed to load to file" + e
+            self._notify()
 
     # Matthew
     def quit(self):
